@@ -33,32 +33,26 @@ class MathViewModel : ViewModel() {
 
         viewModelScope.launch {
             val response = mathApi.evaluateExpressions(request)
-            Log.e("response.result.toString()",response.toString())
 
             response.enqueue(object : Callback<ExpressionResponse> {
-                    override fun onResponse(
-                        call: Call<ExpressionResponse>,
-                        response: Response<ExpressionResponse>
-                    ) {
-                        if(response.isSuccessful){
-                            results.value = response.body()?.result ?: emptyList()
-                            Log.e("results",results.value.toString())
-
-
-
-
-                        }else{
-                            val errorBody = response.errorBody()?.string()
-                            error = errorBody.toString()
-                            Log.e("errorBody",errorBody.toString())
-                        }
+                override fun onResponse(
+                    call: Call<ExpressionResponse>,
+                    response: Response<ExpressionResponse>
+                ) {
+                    if (response.isSuccessful) {
+                        results.value = response.body()?.result ?: emptyList()
+                        Log.e("results", results.value.toString())
+                    } else {
+                        val errorBody = response.errorBody()?.string()
+                        error = errorBody.toString()
+                        Log.e("errorBody", errorBody.toString())
                     }
+                }
 
-                    override fun onFailure(call: Call<ExpressionResponse>, t: Throwable) {
-                        Log.e("onFailure",t.message.toString())
-                    }
-
-                })
+                override fun onFailure(call: Call<ExpressionResponse>, t: Throwable) {
+                    Log.e("onFailure", t.message.toString())
+                }
+            })
         }
     }
 }
